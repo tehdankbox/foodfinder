@@ -8,26 +8,26 @@ import IconStar from "../assets/starIcon.png"
 import ItemComponent from './ItemComponent'
 
 import { db } from '../config';
-let foodRef = db.ref('/food/');
+let drinkRef = db.ref('/drink/');
 
-export default class FoodScreen extends React.Component {
+export default class DrinkScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      food: [],
+      drink: [],
     };
   }
   componentDidMount() {
-    foodRef.on('value', snapshot => {
+    drinkRef.on('value', snapshot => {
       let data = snapshot.val();
-      let food = Object.values(data);
-      this.setState({ food });
+      let drink = Object.values(data);
+      this.setState({ drink });
     });
   }
 
   render() {
     const { navigation } = this.props;
-    const foodId = navigation.getParam('foodId', '');
+    const drinkId = navigation.getParam('drinkId', '');
 
     return (
       <ScrollView style={styles.conteudo}>
@@ -46,19 +46,19 @@ export default class FoodScreen extends React.Component {
           </TouchableOpacity>
         </View>
           <View style={styles.comidaImgContainer}>
-              <Image source={{uri:"https://firebasestorage.googleapis.com/v0/b/foodfinder-rn.appspot.com/o/food%2Ffood"+foodId+".png?alt=media"}} style={styles.comidaImg}/>
+              <Image source={{uri:"https://firebasestorage.googleapis.com/v0/b/foodfinder-rn.appspot.com/o/drink%2Fdrink"+drinkId+".jpeg?alt=media"}} style={styles.comidaImg}/>
           </View>
           <View style={styles.txtNomeContainer}>
-          <ItemComponent id={foodId} type={"foodName"} items={this.state.food} navigation={this.props.navigation}/>
-          <ItemComponent id={foodId} type={"foodPrice"} items={this.state.food} navigation={this.props.navigation}/>
+            <ItemComponent id={drinkId} type={"drinkName"} items={this.state.drink} navigation={this.props.navigation}/>
+            <ItemComponent id={drinkId} type={"drinkPrice"} items={this.state.drink} navigation={this.props.navigation}/>
           </View>
 
           <View style={styles.lista}>
-            <Text style={styles.listaTxt}>Ingredientes</Text>
+            <Text style={styles.listaTxt}>Sabores Disponíveis</Text>
           </View>
 
           <View style={styles.ingredientes}>
-            <ItemComponent id={foodId} type={"foodIngredients"} items={this.state.food} navigation={this.props.navigation}/>
+            <ItemComponent id={drinkId} type={"drinkFlavor"} items={this.state.drink} navigation={this.props.navigation}/>
           </View>
       </ScrollView>
     );

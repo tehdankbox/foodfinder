@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { Button, View, Text, StyleSheet, Image, TouchableOpacity, TouchableNativeFeedback, ScrollView } from "react-native";
-import ImagemRestaurante from "../assets/xisDoVini.png";
+import ItemComponent from './ItemComponent';
+
 import IconeVoltar from "../assets/backIconRed.png";
 import LogoRest from "../assets/logoLancheria.png";
 import MapPin from "../assets/mapPin.png";
 import IconPhone from "../assets/phoneIcon.png";
 import IconStar from "../assets/starIcon.png";
-import Hamb1 from "../assets/johnnyChorao.jpg";
-import Hamb2 from "../assets/hamburguer2.png";
-import Coca from "../assets/coca.jpg";
 import ArrowDown from "../assets/arrowBlackDown.png";
 import ArrowUp from "../assets/arrowBlackUp.png";
-import ItemComponent from './ItemComponent';
 
 import { db } from '../config';
-
 let itemsRef = db.ref('/locations/');
+let foodRef = db.ref('/food/');
+let drinkRef = db.ref('/drink/');
 
 export default class LocationScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -29,6 +27,7 @@ export default class LocationScreen extends React.Component {
     this.state = {
       categorias: [0, 0],
       items: [],
+      food: [],
     };
   }
 
@@ -37,6 +36,16 @@ export default class LocationScreen extends React.Component {
       let data = snapshot.val();
       let items = Object.values(data);
       this.setState({ items });
+    });
+    foodRef.on('value', snapshot => {
+      let data = snapshot.val();
+      let food = Object.values(data);
+      this.setState({ food });
+    });
+    drinkRef.on('value', snapshot => {
+      let data = snapshot.val();
+      let drink = Object.values(data);
+      this.setState({ drink });
     });
   }
 
@@ -71,71 +80,26 @@ export default class LocationScreen extends React.Component {
   }
  }
 
-  renderCategorias(index){
+  renderCategorias(index, locationId){
     switch (index) {
       case 0:
         if(this.state.categorias[index]) {
             return (
               <View style={styles.cardapioItemLinha}>
-                  <View style={styles.cardapioItem}>
-                    <Image source={Hamb1} style={styles.cardapioItemImg}/>
-                    <View style={styles.cardapioItemImgText}>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemNome}>Xis Filé com Alcatra e Bacon</Text>
-                        <Text style={styles.itemInfo}>R$22,90</Text>
-                      </View>
-                      <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Food')} background={TouchableNativeFeedback.SelectableBackground()}>
-                        <View style={styles.cardapioItemBotao}>
-                          <Text style={styles.cardapioItemBotaoTexto}>Informações</Text>
-                        </View>
-                      </TouchableNativeFeedback>
-                    </View>
-                  </View>
-
-                <View style={styles.cardapioItem}>
-                  <Image source={Hamb2} style={styles.cardapioItemImg}/>
-                  <View style={styles.cardapioItemImgText}>
-                    <View style={styles.itemContainer}>
-                      <Text style={styles.itemNome}>Johnny Chorão</Text>
-                      <Text style={styles.itemInfo}>R$15,90</Text>
-                    </View>
-                    <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()}>
-                      <View style={styles.cardapioItemBotao}>
-                        <Text style={styles.cardapioItemBotaoTexto}>Informações</Text>
-                      </View>
-                    </TouchableNativeFeedback>
-                  </View>
-                </View>
+                <ItemComponent id={locationId} type={"cardapio"} items={this.state.food} navigation={this.props.navigation} />
               </View>
             )
         }
         break;
       case 1:
-
-      if(this.state.categorias[index]){
-        return(
-          <View style={styles.cardapioItemLinha}>
-            <View style={styles.cardapioItem}>
-              <Image source={Coca} style={styles.cardapioItemImg}/>
-              <View style={styles.cardapioItemImgText}>
-                <View style={styles.itemContainer}>
-                  <Text style={styles.itemNome}>Coca Cola</Text>
-                  <Text style={styles.itemInfo}>R$4.90 (350ml)
-                  {"\n"}R$5.90 (600ml)
-                  {"\n"}R$8.90 (1.5L)
-                  {"\n"}R$10.90 (2L)</Text>
-                </View>
-                <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()}>
-                  <View style={styles.cardapioItemBotao}>
-                    <Text style={styles.cardapioItemBotaoTexto}>Informações</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
+        if(this.state.categorias[index]){
+          return(
+            <View style={styles.cardapioItemLinha}>
+              <ItemComponent id={locationId} type={"bebidas"} items={this.state.drink} navigation={this.props.navigation} />
             </View>
-          </View>
-        )
-      }
-      break;
+          )
+        }
+        break;
     }
   }
 
@@ -149,8 +113,8 @@ export default class LocationScreen extends React.Component {
 
   render() {
 
-      const { navigation } = this.props;
-      const locationId = navigation.getParam('locationId', '');
+    const { navigation } = this.props;
+    const locationId = navigation.getParam('locationId', '');
     return (
       <ScrollView style={styles.conteudo}>
         <View style={styles.upperBar}>
@@ -173,8 +137,8 @@ export default class LocationScreen extends React.Component {
         </View>
         <View style={styles.txtInfo}>
           <View style={styles.viewTxt}>
-            <ItemComponent id={locationId} type={"locName"} items={this.state.items} />
-            <ItemComponent id={locationId} type={"locPlace"} items={this.state.items} />
+            <ItemComponent id={locationId} type={"locName"} items={this.state.items} navigation={this.props.navigation}/>
+            <ItemComponent id={locationId} type={"locPlace"} items={this.state.items} navigation={this.props.navigation}/>
           </View>
           <View style={styles.tipo}>
             <Image source={LogoRest} style={styles.LogoRest}/>
@@ -194,7 +158,7 @@ export default class LocationScreen extends React.Component {
             </View>
           </TouchableNativeFeedback>
 
-          {this.renderCategorias(0)}
+          {this.renderCategorias(0, locationId)}
 
           <TouchableNativeFeedback onPress={() => this.onUpdateItem(1)}>
             <View style={styles.categoria}>
@@ -205,7 +169,7 @@ export default class LocationScreen extends React.Component {
             </View>
           </TouchableNativeFeedback>
 
-          {this.renderCategorias(1)}
+          {this.renderCategorias(1, locationId)}
 
         </View>
       </ScrollView>

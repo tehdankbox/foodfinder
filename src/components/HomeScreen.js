@@ -1,14 +1,11 @@
 import React from 'react';
 import { Button, View, Text, Picker, TouchableNativeFeedback, TouchableOpacity, Image, ScrollView, StyleSheet } from 'react-native';
-
+import SplashScreen from 'react-native-splash-screen';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+
 import menuHW from '../assets/menuHW.png';
 import Coracao from '../assets/coracaoW.png';
 import Lupa from '../assets/lupaW.png';
-
-import { db } from '../config';
-
-let locationsRef = db.ref('/locations/');
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -18,27 +15,14 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      id: '1',
-      idBurger: '',
-      showNext: false,
-      nomeItem: '',
-      precoItem: '',
+      id: '',
       origin: { latitude: 42.3616132, longitude: -71.0672576 },
       destination: { latitude: 42.3730591, longitude: -71.033754 },
       originText: '',
       destinationText: '',
       locations: [],
+      item: ''
     }
-  }
-
-  registerUser = ()  => {
-    this.props.navigation.navigate('UserRegister', {
-      foodId: 1,
-    })
-  }
-
-  registerCompany = ()  => {
-    this.props.navigation.navigate('CompanyRegister')
   }
 
   selectLocation = (id) => {
@@ -46,32 +30,22 @@ export default class HomeScreen extends React.Component {
   }
 
   accessLocation = () => {
-    this.props.navigation.navigate('Location', {
-      locationId: this.state.id,
-    })
+    this.props.navigation.navigate('Location', {locationId: this.state.id})
   }
 
-  genMarker = (name) => {
+  genMarker = (id, name, lat, lon) => {
     return(
     <Marker
       coordinate={{
-        latitude: -29.650000,
-        longitude: -50.7804653,
+        latitude: lat,
+        longitude: lon,
       }}
       title={name}
       description={'Toque para acessar'}
-      onPress={() => this.selectLocation(0)}
+      onPress={() => this.selectLocation(id)}
       onCalloutPress={this.accessLocation}
     />
     )
-  }
-
-  componentDidMount() {
-    locationsRef.on('value', snapshot => {
-      let data = snapshot.val();
-      let locations = Object.values(data);
-      this.setState({ locations });
-    });
   }
 
   getInitialState() {
@@ -79,20 +53,6 @@ export default class HomeScreen extends React.Component {
       region: {
       },
     };
-  }
-
-  getLocationName = () => {
-    return(
-      this.state.locations.map((item, index) => {
-        if(index==0){
-          return (
-            <View key={index}>
-              <Text>{item.name}</Text>
-            </View>
-          );
-        }
-      })
-    )
   }
 
 
@@ -111,23 +71,14 @@ export default class HomeScreen extends React.Component {
             style={styles.map}
             region={this.state.region}
             initialRegion={{
-              latitude: -29.6479155,
-              longitude: -50.7859752,
-              latitudeDelta: 0.006,
-              longitudeDelta: 0.006,
+              latitude: -29.6476155,
+              longitude: -50.7825752,
+              latitudeDelta: 0.008,
+              longitudeDelta: 0.008,
             }}
           >
-          {this.genMarker("Xis do Vini")}
-          <Marker
-            coordinate={{
-              latitude: -29.6476204,
-              longitude: -50.7847287,
-            }}
-            title={'Fofão Lanches'}
-            description={'Toque para acessar'}
-            onPress={() => this.selectLocation(1)}
-            onCalloutPress={this.accessLocation}
-          />
+          {this.genMarker(0, "Xis do Vini", -29.650000, -50.7804653)}
+          {this.genMarker(1, "Fofão Lanches", -29.6476204, -50.7847287)}
           </MapView>
         </View>
 
@@ -139,12 +90,6 @@ export default class HomeScreen extends React.Component {
             <Image source={Lupa} style={styles.lowerBarIcon}/>
           </TouchableOpacity>
         </View>
-
-        <TouchableNativeFeedback >
-          <View style={styles.option}>
-            {this.getLocationName()}
-          </View>
-        </TouchableNativeFeedback>
         {/*
         <TouchableNativeFeedback onPress={this.registerCompany}>
           <View style={styles.option}>

@@ -1,14 +1,12 @@
 import React from 'react';
 import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 
-import HomeScreen from '../components/HomeScreen';
-import DetailsScreen from '../components/DetailsScreen';
-import LocationScreen from '../components/LocationScreen';
-import LocationScreen2 from '../components/LocationScreen2';
-import FoodScreen from '../components/FoodScreen';
-import UserRegister from '../components/UserRegister';
-import CompanyRegister from '../components/CompanyRegister';
 import DrawerScreen from '../components/DrawerScreen';
+import DrinkScreen from '../components/DrinkScreen';
+import FoodScreen from '../components/FoodScreen';
+import HomeScreen from '../components/HomeScreen';
+import LocationScreen from '../components/LocationScreen';
+import SplashScreen from '../components/SplashScreen';
 
 // import MainTabNavigator from './MainTabNavigator';
 // import LoginScreen from '../screens/LoginScreen'
@@ -16,14 +14,12 @@ import DrawerScreen from '../components/DrawerScreen';
 
 const AppNavigator = createStackNavigator(
   {
-    Home: HomeScreen,
-    Details: DetailsScreen,
-    Location: LocationScreen,
-    Food: FoodScreen,
-    Location2: LocationScreen2,
-    UserRegister: UserRegister,
-    CompanyRegister: CompanyRegister,
+    Splash: SplashScreen,
     Drawer: DrawerScreen,
+    Drink: DrinkScreen,
+    Food: FoodScreen,
+    Home: HomeScreen,
+    Location: LocationScreen,
   },
   {
     headerMode: 'none',
