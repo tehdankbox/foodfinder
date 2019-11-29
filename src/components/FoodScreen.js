@@ -28,6 +28,7 @@ export default class FoodScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const foodId = navigation.getParam('foodId', '');
+    const locationId = navigation.getParam('locationId', '');
 
     return (
       <ScrollView style={styles.conteudo}>
@@ -35,11 +36,11 @@ export default class FoodScreen extends React.Component {
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <Image source={IconeVoltar} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
             <Image source={MapPin} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={IconPhone} style={styles.upperBarIcon}/>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Contact', { locationId: locationId })}>
+            <Image source={IconPhone} style={styles.upperBarIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={IconStar} style={styles.upperBarIcon}/>
@@ -98,6 +99,10 @@ const styles = StyleSheet.create({
         height: 250,
     },
 
+    txtNomeContainer: {
+        marginTop: 0,
+    },
+
     txtNome: {
         fontSize: 21,
         textAlign: 'center',
@@ -111,10 +116,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#e8e8e8",
         paddingVertical: 5,
         marginBottom: 20,
-    },
-
-    txtNomeContainer: {
-        marginTop: 0,
     },
 
     lista: {
@@ -136,19 +137,5 @@ const styles = StyleSheet.create({
         borderTopColor: '#4f0000',
         borderBottomWidth: 3,
         borderBottomColor: '#4f0000',
-    },
-
-    ingredientesItem: {
-        textAlign: 'center',
-        paddingVertical: 5,
-        fontSize: 18,
-        backgroundColor: "#f1f1f1",
-    },
-
-    ingredientesItem2: {
-        textAlign: 'center',
-        paddingVertical: 5,
-        fontSize: 18,
-        backgroundColor: "#e8e8e8",
     },
 });

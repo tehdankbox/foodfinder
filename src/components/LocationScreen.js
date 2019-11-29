@@ -3,7 +3,6 @@ import { Button, View, Text, StyleSheet, Image, TouchableOpacity, TouchableNativ
 import ItemComponent from './ItemComponent';
 
 import IconeVoltar from "../assets/backIconRed.png";
-import LogoRest from "../assets/logoLancheria.png";
 import MapPin from "../assets/mapPin.png";
 import IconPhone from "../assets/phoneIcon.png";
 import IconStar from "../assets/starIcon.png";
@@ -121,11 +120,11 @@ export default class LocationScreen extends React.Component {
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <Image source={IconeVoltar} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
             <Image source={MapPin} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={IconPhone} style={styles.upperBarIcon}/>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Contact', { locationId: locationId })}>
+            <Image source={IconPhone} style={styles.upperBarIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={IconStar} style={styles.upperBarIcon}/>
@@ -141,8 +140,7 @@ export default class LocationScreen extends React.Component {
             <ItemComponent id={locationId} type={"locPlace"} items={this.state.items} navigation={this.props.navigation}/>
           </View>
           <View style={styles.tipo}>
-            <Image source={LogoRest} style={styles.LogoRest}/>
-            <Text style={styles.tipoTxt}>Lancheria</Text>
+            <ItemComponent id={locationId} type={"locSpec"} items={this.state.items} navigation={this.props.navigation}/>
           </View>
         </View>
         <View style={styles.lista}>
@@ -152,7 +150,7 @@ export default class LocationScreen extends React.Component {
           <TouchableNativeFeedback onPress={() => this.onUpdateItem(0)}>
             <View style={styles.categoria}>
               <Text style={styles.categoriaTxt}>
-                Hambúrgueres
+                Alimentos
               </Text>
               {this.renderSeta(0)}
             </View>

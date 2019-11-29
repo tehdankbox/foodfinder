@@ -28,6 +28,7 @@ export default class DrinkScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const drinkId = navigation.getParam('drinkId', '');
+    const locationId = navigation.getParam('locationId', '');
 
     return (
       <ScrollView style={styles.conteudo}>
@@ -35,11 +36,11 @@ export default class DrinkScreen extends React.Component {
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <Image source={IconeVoltar} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
             <Image source={MapPin} style={styles.upperBarIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={IconPhone} style={styles.upperBarIcon}/>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Contact', { locationId: locationId })}>
+            <Image source={IconPhone} style={styles.upperBarIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={IconStar} style={styles.upperBarIcon}/>

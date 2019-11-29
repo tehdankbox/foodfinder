@@ -7,6 +7,12 @@ import menuHW from '../assets/menuHW.png';
 import Coracao from '../assets/coracaoW.png';
 import Lupa from '../assets/lupaW.png';
 
+let mapStyle = [
+  {"featureType": "administrative", "elementType": "geometry", "stylers": [{"visibility": "off"}]},
+  {"featureType": "poi", "stylers": [{"visibility": "off"}]},
+  {"featureType": "road", "elementType": "labels.icon", "stylers": [{"visibility": "off"}]},
+  {"featureType": "transit", "stylers": [{"visibility": "off"}]}]
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home',
@@ -36,6 +42,7 @@ export default class HomeScreen extends React.Component {
   genMarker = (id, name, lat, lon) => {
     return(
     <Marker
+      //draggable
       coordinate={{
         latitude: lat,
         longitude: lon,
@@ -44,6 +51,7 @@ export default class HomeScreen extends React.Component {
       description={'Toque para acessar'}
       onPress={() => this.selectLocation(id)}
       onCalloutPress={this.accessLocation}
+      //onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
     />
     )
   }
@@ -55,19 +63,23 @@ export default class HomeScreen extends React.Component {
     };
   }
 
-
   render() {
     return (
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.appContainer}>
-        <View style={styles.barraSuperior}>
-          <View>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Drawer')}>
-              <Image source={menuHW} style={styles.menuHam}/>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.bar}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Drawer')}>
+            <Image source={menuHW} style={styles.barIcon}/>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={Coracao} style={styles.barIcon}/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Search')}>
+            <Image source={Lupa} style={styles.barIcon}/>
+          </TouchableOpacity>
         </View>
         <View style={styles.container}>
           <MapView
+            customMapStyle={mapStyle}
             style={styles.map}
             region={this.state.region}
             initialRegion={{
@@ -77,18 +89,11 @@ export default class HomeScreen extends React.Component {
               longitudeDelta: 0.008,
             }}
           >
-          {this.genMarker(0, "Xis do Vini", -29.650000, -50.7804653)}
-          {this.genMarker(1, "Fofão Lanches", -29.6476204, -50.7847287)}
+          {this.genMarker(0, "Xis do Vini", -29.65000000, -50.78056409)}
+          {this.genMarker(1, "Fofão Lanches", -29.65108662, -50.78261967)}
+          {this.genMarker(2, "Santo Grill", -29.64825764, -50.78474834)}
+          {this.genMarker(3, "Xis do Gordo", -29.64827978, -50.78154210)}
           </MapView>
-        </View>
-
-        <View style={styles.lowerBar}>
-          <TouchableOpacity onPress={this.registerUser}>
-            <Image source={Coracao} style={styles.lowerBarIcon}/>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={Lupa} style={styles.lowerBarIcon}/>
-          </TouchableOpacity>
         </View>
         {/*
         <TouchableNativeFeedback onPress={this.registerCompany}>
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
   },
   container: {
-    height: 655,
+    height: 750,
     width: 400,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -126,18 +131,7 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  barraSuperior: {
-    height: 58,
-    backgroundColor: '#a90f0f',
-    flexDirection: 'row',
-  },
-  menuHam: {
-    marginHorizontal: 15,
-    marginVertical: 6,
-    height: 45,
-    width: 45,
-  },
-  lowerBar: {
+  bar: {
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -145,10 +139,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#a90f0f',
     padding:5,
   },
-
-  lowerBarIcon: {
+  barIcon: {
     width:50,
-    height: 30,
+    height:30,
     flex:1,
   },
 
